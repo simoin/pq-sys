@@ -106,7 +106,7 @@ fn configured_by_pkg_config() -> bool {
 
 #[cfg(target_env = "msvc")]
 fn configured_by_vcpkg() -> bool {
-    if vcpkg::find_package("openssl").ok() {
+    if vcpkg::find_package("openssl").is_ok() {
         println!("cargo:rustc-link-lib=crypt32");
         println!("cargo:rustc-link-lib=gdi32");
         println!("cargo:rustc-link-lib=user32");
