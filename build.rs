@@ -106,20 +106,17 @@ fn configured_by_pkg_config() -> bool {
 
 #[cfg(target_env = "msvc")]
 fn configured_by_vcpkg() -> bool {
-    vcpkg::probe_package("libpq").map(|_| {
+    vcpkg::Config::new()
+        .lib_name("libeay32")
+        .lib_name("ssleay32")
+        .probe("openssl").ok();
 
-        // found libpq which depends on openssl
-        vcpkg::Config::new()
-            .lib_name("libeay32")
-            .lib_name("ssleay32")
-            .probe("openssl").ok();
-
-        println!("cargo:rustc-link-lib=crypt32");
-        println!("cargo:rustc-link-lib=gdi32");
-        println!("cargo:rustc-link-lib=user32");
-        println!("cargo:rustc-link-lib=secur32");
-        println!("cargo:rustc-link-lib=shell32");
-    }).is_ok()
+    println!("cargo:rustc-link-lib=crypt32");
+    println!("cargo:rustc-link-lib=gdi32");
+    println!("cargo:rustc-link-lib=user32");
+    println!("cargo:rustc-link-lib=secur32");
+    println!("cargo:rustc-link-lib=shell32");
+    vcpkg::find_package("libpq").is_ok()
 }
 
 #[cfg(not(target_env = "msvc"))]
